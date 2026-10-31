@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyPulse | Responsive Weather App</title>
+  
+  <!-- Google Fonts for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons for clean UI symbols -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- External CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background glow overlay for aesthetic visual effect -->
+  <div class="bg-gradient-orb orb-1"></div>
+  <div class="bg-gradient-orb orb-2"></div>
+
+  <main class="app-container">
+    <!-- Weather Card Container -->
+    <div class="weather-card" id="weatherCard">
+      
+      <!-- App Header: Title & Unit Toggle Switch -->
+      <header class="app-header">
+        <div class="header-brand">
+          <i class="fa-solid fa-cloud-sun-rain brand-icon"></i>
+          <h1>SkyPulse <span>Weather</span></h1>
+        </div>
+
+        <!-- Celsius / Fahrenheit Unit Switcher -->
+        <div class="unit-toggle" id="unitToggle">
+          <button type="button" class="unit-btn active" id="celsiusBtn" data-unit="metric" title="Celsius">°C</button>
+          <button type="button" class="unit-btn" id="fahrenheitBtn" data-unit="imperial" title="Fahrenheit">°F</button>
+        </div>
+      </header>
+
+      <!-- Search Section -->
+      <section class="search-section">
+        <form id="searchForm" class="search-form" autocomplete="off">
+          <div class="search-input-wrapper">
+            <i class="fa-solid fa-location-dot search-icon"></i>
+            <input 
+              type="text" 
+              id="cityInput" 
+              placeholder="Enter city name (e.g. London, Tokyo)..." 
+              required
+              aria-label="City name"
+            >
+            <button type="button" id="clearBtn" class="clear-btn" aria-label="Clear input" style="display: none;">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <button type="submit" id="searchBtn" class="search-btn" aria-label="Search weather">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Search</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Demo Mode Notification Banner (Appears when using sample data) -->
+      <div id="demoNotice" class="demo-banner" style="display: none;">
+        <i class="fa-solid fa-circle-info"></i>
+        <span><strong>Demo Mode:</strong> Add your free OpenWeather API key in <code>script.js</code> for global live data.</span>
+      </div>
+
+      <!-- Error Message Banner -->
+      <div id="errorMessage" class="error-banner" style="display: none;">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span id="errorText">City not found. Please try another name.</span>
+      </div>
+
+      <!-- Loading Spinner Indicator -->
+      <div id="loadingIndicator" class="loading-state" style="display: none;">
+        <div class="spinner"></div>
+        <p>Fetching weather forecast...</p>
+      </div>
+
+      <!-- Main Weather Content Display -->
+      <section id="weatherContent" class="weather-content">
+        
+        <!-- Primary Overview: City, Date, Icon, Temperature -->
+        <div class="weather-main">
+          <div class="location-box">
+            <h2 id="cityName" class="city-name">London</h2>
+            <span id="countryCode" class="country-badge">GB</span>
+            <p id="currentDate" class="current-date">Wednesday, 21 Oct</p>
+          </div>
+
+          <div class="weather-visual">
+            <div class="icon-wrapper">
+              <img id="weatherIcon" src="https://openweathermap.org/img/wn/02d@4x.png" alt="Weather condition icon">
+            </div>
+            <p id="weatherDesc" class="weather-desc">Scattered Clouds</p>
+          </div>
+
+          <div class="temp-box">
+            <div class="temperature">
+              <span id="temperatureValue">18</span>
+              <span class="temp-unit" id="tempUnitSymbol">°C</span>
+            </div>
+            <p class="feels-like">Feels like <span id="feelsLikeValue">17</span><span id="feelsLikeUnit">°C</span></p>
+          </div>
+        </div>
+
+        <!-- Weather Details Grid: Humidity, Wind, Pressure, Min/Max -->
+        <div class="weather-details-grid">
+          
+          <!-- Humidity Card -->
+          <div class="detail-card">
+            <div class="detail-icon humidity-icon">
+              <i class="fa-solid fa-droplet"></i>
+            </div>
+            <div class="detail-info">
+              <span class="detail-label">Humidity</span>
+              <span class="detail-val" id="humidityValue">72%</span>
+            </div>
+          </div>
+
+          <!-- Wind Speed Card -->
+          <div class="detail-card">
+            <div class="detail-icon wind-icon">
+              <i class="fa-solid fa-wind"></i>
+            </div>
+            <div class="detail-info">
+              <span class="detail-label">Wind Speed</span>
+              <span class="detail-val" id="windValue">14 km/h</span>
+            </div>
+          </div>
+
+          <!-- Atmospheric Pressure Card -->
+          <div class="detail-card">
+            <div class="detail-icon pressure-icon">
+              <i class="fa-solid fa-gauge-high"></i>
+            </div>
+            <div class="detail-info">
+              <span class="detail-label">Pressure</span>
+              <span class="detail-val" id="pressureValue">1013 hPa</span>
+            </div>
+          </div>
+
+          <!-- Min / Max Temp Range Card -->
+          <div class="detail-card">
+            <div class="detail-icon range-icon">
+              <i class="fa-solid fa-temperature-half"></i>
+            </div>
+            <div class="detail-info">
+              <span class="detail-label">Min / Max</span>
+              <span class="detail-val" id="minMaxValue">14° / 21°</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- App Footer -->
+      <footer class="app-footer">
+        <p>Powered by <a href="https://openweathermap.org/" target="_blank" rel="noopener">OpenWeatherMap API</a></p>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- External JavaScript Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
